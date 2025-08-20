@@ -23,6 +23,7 @@ function formatDate(dateString) {
 class DentalAPI {
     constructor() {
         this.baseUrl = API_CONFIG.baseUrl;
+        this.baseUrl = 'https://n8n.chilldigital.tech/webhook';
     }
 
     async request(endpoint, options = {}) {
