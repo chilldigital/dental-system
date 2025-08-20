@@ -53,7 +53,8 @@ class DentalAPI {
     // Métodos para pacientes
     async getPacientes(filtros = {}) {
         const params = new URLSearchParams(filtros).toString();
-        return this.request(`pacientes?${params}`);
+        const query = params ? `?${params}` : '';
+        return this.request(`pacientes${query}`);
     }
 
     async createPaciente(datos) {
