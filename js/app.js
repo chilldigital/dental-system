@@ -79,8 +79,8 @@ class DentalAPI {
 
     // Utilidades
     showNotification(message, type = 'info') {
-        const alertClass = type === 'error' ? 'alert-danger' : 
-                          type === 'success' ? 'alert-success' : 'alert-info';
+        const alertClass =  type === 'error' ? 'alert-danger' : 
+                            type === 'success' ? 'alert-success' : 'alert-info';
         
         const alert = document.createElement('div');
         alert.className = `alert ${alertClass} alert-dismissible fade show position-fixed`;
