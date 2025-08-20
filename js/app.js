@@ -1,6 +1,6 @@
 // API Configuration
 const API_CONFIG = {
-    baseUrl: '/api',
+    baseUrl: 'https://n8n.chilldigital.tech/webhook',
     timeout: 30000
 };
 
