@@ -177,6 +177,12 @@ async function crearPaciente(event) {
         api.showNotification('Por favor corrige los errores en el formulario', 'error');
         return;
     }
+
+    if (error.status === 429) {
+    api.showNotification('Demasiadas peticiones. Espera un momento.', 'warning');
+    } else if (error.status === 500) {
+        api.showNotification('Error del servidor N8N. Revisa los workflows.', 'error');
+        }
     
     const formData = new FormData(form);
     
