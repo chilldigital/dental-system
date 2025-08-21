@@ -1,10 +1,10 @@
 {
-    email soporte@chilldigital.tech
+    email "soporte@chilldigital.tech"
     servers {
         max_header_size 1MB
     }
 }
 
 odonto.chilldigital.tech {
-    reverse_proxy https://n8n.chilldigital.tech
+    reverse_proxy "https://n8n.chilldigital.tech/webhook"
 }
