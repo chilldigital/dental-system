@@ -20,26 +20,30 @@ odonto.chilldigital.tech {
     }
     respond @cors_preflight 204
 
-    # --- Proxy a n8n: /api/* -> /webhook{path} ---
-    handle_path /api/* {
-        reverse_proxy https://n8n.chilldigital.tech/webhook{path} {
-            header_up Host "n8n.chilldigital.tech"
-            header_up X-Real-IP {remote_host}
-            header_up X-Forwarded-For {remote_host}
-            header_up X-Forwarded-Proto {scheme}
-            header_up X-Forwarded-Host {host}
-            header_up User-Agent "DentalPro-Frontend/2.0"
+# --- Proxy a n8n: /api/* -> /webhook{path} ---
+handle_path /api/* {
+    # handle_path ya quitó /api → ahora agregamos /webhook al inicio
+    rewrite * /webhook{path}
 
-            # CORS en respuestas reales de la API
-            header_down Access-Control-Allow-Origin "https://odonto.chilldigital.tech"
-            header_down Access-Control-Allow-Credentials "true"
+    # importante: upstream SIN path y SIN placeholders
+    reverse_proxy https://n8n.chilldigital.tech {
+        header_up Host "n8n.chilldigital.tech"
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+        header_up X-Forwarded-Host {host}
+        header_up User-Agent "DentalPro-Frontend/2.0"
 
-            transport http {
-                dial_timeout 30s
-                response_header_timeout 30s
-            }
+        # CORS en respuestas reales
+        header_down Access-Control-Allow-Origin "https://odonto.chilldigital.tech"
+        header_down Access-Control-Allow-Credentials "true"
+
+        transport http {
+            dial_timeout 30s
+            response_header_timeout 30s
         }
     }
+}
 
     # --- Archivos estáticos (SPA) ---
     root * /usr/share/caddy
