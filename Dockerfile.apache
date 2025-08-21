@@ -1,0 +1,41 @@
+# Dockerfile con Apache (alternativa a Caddy)
+FROM httpd:2.4-alpine
+
+# Copiar archivos
+COPY public/ /usr/local/apache2/htdocs/
+COPY src/ /usr/local/apache2/htdocs/src/
+
+# Habilitar módulos necesarios
+RUN echo "LoadModule rewrite_module modules/mod_rewrite.so" >> /usr/local/apache2/conf/httpd.conf && \
+    echo "LoadModule proxy_module modules/mod_proxy.so" >> /usr/local/apache2/conf/httpd.conf && \
+    echo "LoadModule proxy_http_module modules/mod_proxy_http.so" >> /usr/local/apache2/conf/httpd.conf && \
+    echo "LoadModule headers_module modules/mod_headers.so" >> /usr/local/apache2/conf/httpd.conf
+
+# Configuración Apache
+RUN echo '<Directory "/usr/local/apache2/htdocs"> \
+    AllowOverride All \
+    Require all granted \
+</Directory> \
+\
+# Proxy para API \
+ProxyPass /api/ https://n8n.chilldigital.tech/webhook/ \
+ProxyPassReverse /api/ https://n8n.chilldigital.tech/webhook/ \
+\
+# SPA fallback \
+RewriteEngine On \
+RewriteCond %{REQUEST_FILENAME} !-f \
+RewriteCond %{REQUEST_FILENAME} !-d \
+RewriteRule . /index.html [L] \
+\
+# Headers de seguridad \
+Header always set X-Frame-Options "SAMEORIGIN" \
+Header always set X-Content-Type-Options "nosniff" \
+\
+ErrorDocument 404 /404.html \
+ErrorDocument 500 /50x.html' >> /usr/local/apache2/conf/httpd.conf
+
+# Exponer puerto 80
+EXPOSE 80
+
+# Comando de inicio
+CMD ["httpd-foreground"]

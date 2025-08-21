@@ -5,18 +5,10 @@ FROM caddy:2-alpine
 COPY public/ /usr/share/caddy/
 COPY src/ /usr/share/caddy/src/
 
-# Crear Caddyfile básico
-RUN echo ":80" > /etc/caddy/Caddyfile && \
-    echo "root * /usr/share/caddy" >> /etc/caddy/Caddyfile && \
-    echo "file_server" >> /etc/caddy/Caddyfile && \
-    echo "try_files {path} /index.html" >> /etc/caddy/Caddyfile && \
-    echo "" >> /etc/caddy/Caddyfile && \
-    echo "reverse_proxy /api/* https://n8n.chilldigital.tech {" >> /etc/caddy/Caddyfile && \
-    echo "    uri strip_prefix /api" >> /etc/caddy/Caddyfile && \
-    echo "    uri add_prefix /webhook" >> /etc/caddy/Caddyfile && \
-    echo "}" >> /etc/caddy/Caddyfile
+# Copiar Caddyfile externo (más limpio)
+COPY Caddyfile /etc/caddy/Caddyfile
 
-# Verificar Caddyfile creado
+# Verificar contenido del Caddyfile
 RUN cat /etc/caddy/Caddyfile
 
 # Exponer puerto 80

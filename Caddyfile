@@ -1,0 +1,11 @@
+:80
+
+root * /usr/share/caddy
+file_server
+
+reverse_proxy /api/* https://n8n.chilldigital.tech {
+    uri strip_prefix /api
+    uri add_prefix /webhook
+}
+
+try_files {path} /index.html
