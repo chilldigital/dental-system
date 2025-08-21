@@ -1,6 +1,9 @@
 # Dockerfile que organiza archivos para nginx
 FROM nginx:alpine
 
+# Crear usuario no-root
+RUN adduser -D nginxuser
+
 # Copiar archivos HTML a la raíz de nginx
 COPY public/ /usr/share/nginx/html/
 
@@ -15,6 +18,13 @@ RUN echo "=== VERIFICANDO ESTRUCTURA ===" && \
     ls -la /usr/share/nginx/html/src/styles/ && \
     echo "Archivos JS:" && \
     ls -la /usr/share/nginx/html/src/scripts/
+
+# Configurar permisos
+RUN chown -R nginxuser:nginxuser /usr/share/nginx/html && \
+    chmod -R 755 /usr/share/nginx/html
+
+# Cambiar a usuario no-root
+USER nginxuser
 
 # Usar configuración simple de nginx
 RUN echo 'server { \
