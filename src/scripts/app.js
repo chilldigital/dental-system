@@ -1,10 +1,12 @@
-// API Configuration
-const API_CONFIG = {
-    baseUrl: 'https://n8n.chilldigital.tech/webhook',
-    timeout: 30000
-};
-
 // Utility functions
+
+function sanitizeInput(input) {
+    if (typeof input !== 'string') return '';
+    return input.trim()
+        .replace(/[<>'"]/g, '') // Evita XSS
+        .substring(0, 200); // Limita tamaño
+}
+
 function formatDate(dateString) {
     if (!dateString) return 'No disponible';
     
@@ -22,7 +24,6 @@ function formatDate(dateString) {
 
 class DentalAPI {
     constructor() {
-        this.baseUrl = API_CONFIG.baseUrl;
         this.baseUrl = 'https://n8n.chilldigital.tech/webhook';
     }
 
