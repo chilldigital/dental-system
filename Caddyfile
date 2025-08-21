@@ -6,13 +6,8 @@
 # Configuración global
 {
     # Email para certificados SSL automáticos (OBLIGATORIO para producción)
-    email soporte@chilldigital.tech
+    email agustin@chilldigital.tech
     
-    # Configuración de servidores
-    servers {
-        # Límite de headers
-        max_header_bytes 1MB
-    }
 }
 
 # =======================================================================
