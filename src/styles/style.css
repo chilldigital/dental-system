@@ -1,0 +1,380 @@
+:root {
+    --dental-primary: #0077be;
+    --dental-secondary: #00a8cc;
+    --dental-accent: #4cc9f0;
+    --dental-light: #f8fcff;
+    --dental-dark: #003d5b;
+    --dental-success: #10b981;
+    --dental-warning: #f59e0b;
+    --dental-danger: #ef4444;
+    --dental-info: #8b5cf6;
+    
+    /* Espaciado consistente */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    
+    /* Border radius consistente */
+    --border-radius-sm: 8px;
+    --border-radius-md: 12px;
+    --border-radius-lg: 16px;
+    
+    /* Sombras consistentes */
+    --shadow-sm: 0 2px 8px rgba(0, 119, 190, 0.08);
+    --shadow-md: 0 4px 20px rgba(0, 119, 190, 0.1);
+    --shadow-lg: 0 8px 30px rgba(0, 119, 190, 0.15);
+    
+    /* Transiciones */
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, var(--dental-light) 0%, #ffffff 100%);
+    min-height: 100vh;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    color: var(--dental-primary) !important;
+}
+
+.nav-link {
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    color: var(--dental-secondary) !important;
+    transform: translateY(-1px);
+}
+
+.card {
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 119, 190, 0.1);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0, 119, 190, 0.15);
+}
+
+.hero-card {
+    background: linear-gradient(135deg, var(--dental-primary), var(--dental-secondary)) !important;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--dental-primary), var(--dental-secondary));
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    padding: 12px 24px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 119, 190, 0.3);
+    background: linear-gradient(135deg, var(--dental-dark), var(--dental-primary));
+}
+
+.btn-outline-primary {
+    border: 2px solid var(--dental-primary);
+    color: var(--dental-primary);
+    border-radius: 12px;
+    font-weight: 600;
+    padding: 10px 20px;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+    background: var(--dental-primary);
+    border-color: var(--dental-primary);
+    transform: translateY(-2px);
+}
+
+.table {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.table th {
+    background: linear-gradient(135deg, var(--dental-primary), var(--dental-secondary));
+    color: white;
+    font-weight: 600;
+    border: none;
+    padding: 16px;
+}
+
+.table td {
+    padding: 16px;
+    vertical-align: middle;
+    border-color: rgba(0, 119, 190, 0.1);
+}
+
+.form-control, .form-select {
+    border-radius: 12px;
+    border: 2px solid rgba(0, 119, 190, 0.1);
+    padding: 12px 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--dental-primary);
+    box-shadow: 0 0 0 0.2rem rgba(0, 119, 190, 0.25);
+}
+
+.stat-card {
+    background: linear-gradient(135deg, var(--dental-accent), var(--dental-secondary));
+    color: white;
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px) scale(1.02);
+}
+
+.stat-card-success {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.stat-card-warning {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.stat-card-info {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--dental-primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 119, 190, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--dental-primary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--dental-dark);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .card {
+        margin-bottom: var(--spacing-md);
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+}
+
+/* ==========================================================================
+   ACCESIBILIDAD Y FORMULARIOS
+   ========================================================================== */
+
+/* Estilos para focus - importante para accesibilidad */
+*:focus {
+    outline: 2px solid var(--dental-primary);
+    outline-offset: 2px;
+}
+
+/* Ocultar outline en mouse, mantener en teclado */
+*:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* Focus visible para elementos interactivos */
+.btn:focus-visible,
+.nav-link:focus-visible,
+.form-control:focus-visible,
+.form-select:focus-visible {
+    outline: 2px solid var(--dental-primary);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 0.2rem rgba(0, 119, 190, 0.25);
+}
+
+/* Estilos para formularios mejorados */
+.form-label {
+    font-weight: 600;
+    margin-bottom: var(--spacing-sm);
+    color: var(--dental-dark);
+}
+
+.form-text {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-top: var(--spacing-xs);
+}
+
+/* Estados de validación */
+.form-control.is-invalid,
+.form-select.is-invalid {
+    border-color: var(--dental-danger);
+    box-shadow: 0 0 0 0.2rem rgba(239, 68, 68, 0.25);
+}
+
+.form-control.is-valid,
+.form-select.is-valid {
+    border-color: var(--dental-success);
+    box-shadow: 0 0 0 0.2rem rgba(16, 185, 129, 0.25);
+}
+
+.invalid-feedback {
+    color: var(--dental-danger);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.valid-feedback {
+    color: var(--dental-success);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+/* Fieldset y legend mejorados */
+fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+legend {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: var(--spacing-md);
+    padding: 0;
+}
+
+/* Checkboxes y radios mejorados */
+.form-check-input:checked {
+    background-color: var(--dental-primary);
+    border-color: var(--dental-primary);
+}
+
+.form-check-input:focus {
+    border-color: var(--dental-primary);
+    box-shadow: 0 0 0 0.2rem rgba(0, 119, 190, 0.25);
+}
+
+/* Mejoras para lectores de pantalla */
+.visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+/* Estados de loading */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+/* Animaciones reducidas para usuarios con preferencias de movimiento */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    
+    .card:hover {
+        transform: none;
+    }
+    
+    .btn-primary:hover {
+        transform: none;
+    }
+}
+
+/* Modo de alto contraste */
+@media (prefers-contrast: high) {
+    .card {
+        border: 1px solid var(--dental-dark);
+    }
+    
+    .btn-outline-primary {
+        border-width: 3px;
+    }
+}
+
+/* Mejoras para impresión */
+@media print {
+    .navbar,
+    .btn,
+    .card-header {
+        display: none !important;
+    }
+    
+    .card {
+        box-shadow: none !important;
+        border: 1px solid #000 !important;
+    }
+    
+    body {
+        background: white !important;
+    }
+}

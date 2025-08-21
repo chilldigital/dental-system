@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Formulario para agregar nuevo paciente en DentalPro">
+    <title>Nuevo Paciente - DentalPro</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link href="../src/styles/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header y Navigation -->
+    <header role="banner">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm" role="navigation" aria-label="Navegación principal">
+            <div class="container-fluid px-4">
+                <a class="navbar-brand d-flex align-items-center" href="index.html" aria-label="DentalPro - Ir al inicio">
+                    <i class="bi bi-heart-pulse fs-4 me-2" aria-hidden="true"></i>
+                    <span>DentalPro</span>
+                </a>
+                
+                <div class="navbar-nav ms-auto">
+                    <a class="nav-link" href="index.html">Inicio</a>
+                    <a class="nav-link" href="pacientes.html">Pacientes</a>
+                    <a class="nav-link active" href="nuevo-paciente.html" aria-current="page">Nuevo Paciente</a>
+                    <a class="nav-link" href="calendario.html">Calendario</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main role="main">
+        <div class="container-fluid py-4">
+            <!-- Breadcrumb y Header -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="index.html">Inicio</a></li>
+                            <li class="breadcrumb-item"><a href="pacientes.html">Pacientes</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Nuevo Paciente</li>
+                        </ol>
+                    </nav>
+                    <h1 class="mb-0">
+                        <i class="bi bi-person-plus text-primary me-2" aria-hidden="true"></i>
+                        Agregar Nuevo Paciente
+                    </h1>
+                    <p class="text-muted">Completa la información del paciente para agregarlo al sistema</p>
+                </div>
+            </div>
+
+        <div class="row justify-content-center">
+                                <!-- Información de Contacto -->
+                                <fieldset class="row mb-4">
+                                    <legend class="col-12 h6 text-primary fw-bold mb-3">Contacto</legend>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label for="telefono" class="form-label">Teléfono</label>
+                                        <input type="tel" class="form-control" id="telefono" name="telefono" 
+                                               aria-describedby="telefono-help" autocomplete="tel">
+                                        <div id="telefono-help" class="form-text">Ej: +54 11 1234-5678</div>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="email" name="email" 
+                                               aria-describedby="email-error" autocomplete="email">
+                                        <div id="email-error" class="invalid-feedback" role="alert"></div>
+                                    </div>
+                                </fieldset>
+
+                                <!-- Información Médica -->
+                                <fieldset class="row mb-4">
+                                    <legend class="col-12 h6 text-primary fw-bold mb-3">Información Médica</legend>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label for="obra_social" class="form-label">
+                                            Obra Social <span class="text-danger" aria-label="obligatorio">*</span>
+                                        </label>
+                                        <select class="form-select" id="obra_social" name="obra_social" 
+                                                required aria-describedby="obra-social-error">
+                                            <option value="">Seleccionar...</option>
+                                            <option value="OSDE">OSDE</option>
+                                            <option value="Swiss Medical">Swiss Medical</option>
+                                            <option value="Galeno">Galeno</option>
+                                            <option value="Particular">Particular</option>
+                                            <option value="Otra">Otra</option>
+                                        </select>
+                                        <div id="obra-social-error" class="invalid-feedback" role="alert"></div>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label for="numero_afiliado" class="form-label">Número de Afiliado</label>
+                                        <input type="text" class="form-control" id="numero_afiliado" name="numero_afiliado" 
+                                               aria-describedby="afiliado-help">
+                                        <div id="afiliado-help" class="form-text">Solo si corresponde a la obra social</div>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
+                                        <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" 
+                                               aria-describedby="fecha-help" autocomplete="bday">
+                                        <div id="fecha-help" class="form-text">Formato: dd/mm/aaaa</div>
+                                    </div>
+                                </fieldset>
+
+                                <!-- Historia Clínica -->
+                                <fieldset class="row mb-4">
+                                    <legend class="col-12 h6 text-primary fw-bold mb-3">Historia Clínica</legend>
+                                    
+                                    <div class="col-12 mb-3">
+                                        <label for="historia_clinica" class="form-label">
+                                            Historia Clínica <span class="text-danger" aria-label="obligatorio">*</span>
+                                        </label>
+                                        <textarea class="form-control" id="historia_clinica" name="historia_clinica" 
+                                                rows="6" required aria-describedby="historia-help historia-error"></textarea>
+                                        <div id="historia-help" class="form-text">Describa el motivo de consulta, síntomas y observaciones relevantes</div>
+                                        <div id="historia-error" class="invalid-feedback" role="alert"></div>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <fieldset>
+                                            <legend class="form-label">Antecedentes Médicos</legend>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="diabetes" 
+                                                       name="antecedentes" value="diabetes">
+                                                <label class="form-check-label" for="diabetes">Diabetes</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="hipertension" 
+                                                       name="antecedentes" value="hipertension">
+                                                <label class="form-check-label" for="hipertension">Hipertensión</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="cardiopatia" 
+                                                       name="antecedentes" value="cardiopatia">
+                                                <label class="form-check-label" for="cardiopatia">Cardiopatías</label>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label for="alergias" class="form-label">Alergias</label>
+                                        <textarea class="form-control" id="alergias" name="alergias" 
+                                                rows="4" aria-describedby="alergias-help"></textarea>
+                                        <div id="alergias-help" class="form-text">Mencione cualquier alergia conocida a medicamentos, alimentos o sustancias</div>
+                                    </div>
+                                </fieldset>
+
+                                <!-- Botones -->
+                                <div class="d-flex gap-3 pt-3 border-top" role="group" aria-label="Acciones del formulario">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-check-circle me-2" aria-hidden="true"></i>Guardar Paciente
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" id="btn-limpiar">
+                                        <i class="bi bi-arrow-clockwise me-2" aria-hidden="true"></i>Limpiar
+                                    </button>
+                                    <a href="pacientes.html" class="btn btn-outline-danger">
+                                        <i class="bi bi-x-circle me-2" aria-hidden="true"></i>Cancelar
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../src/scripts/app.js"></script>
+    <script src="../src/scripts/nuevo-paciente.js"></script>
+</body>
+</html>

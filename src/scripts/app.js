@@ -170,10 +170,25 @@ async function crearPaciente(event) {
     event.preventDefault();
     
     const form = event.target;
+    
+    // Validar formulario antes de enviar
+    if (typeof validateForm === 'function' && !validateForm(form)) {
+        api.showNotification('Por favor corrige los errores en el formulario', 'error');
+        return;
+    }
+    
     const formData = new FormData(form);
     
-    // Convertir FormData a objeto
-    const datos = Object.fromEntries(formData.entries());
+    // Sanitizar datos de entrada
+    const datos = {};
+    for (let [key, value] of formData.entries()) {
+        // Limpiar y sanitizar cada campo
+        if (typeof value === 'string') {
+            datos[key] = value.trim();
+        } else {
+            datos[key] = value;
+        }
+    }
     
     // Recoger antecedentes (checkboxes múltiples)
     const antecedentes = [];
@@ -182,28 +197,61 @@ async function crearPaciente(event) {
     });
     datos.antecedentes = antecedentes;
     
+    // Validaciones adicionales del lado cliente
+    if (!datos.nombre || datos.nombre.length < 2) {
+        api.showNotification('El nombre debe tener al menos 2 caracteres', 'error');
+        return;
+    }
+    
+    if (!datos.obra_social) {
+        api.showNotification('Debe seleccionar una obra social', 'error');
+        return;
+    }
+    
+    if (!datos.historia_clinica || datos.historia_clinica.length < 10) {
+        api.showNotification('La historia clínica debe tener al menos 10 caracteres', 'error');
+        return;
+    }
+    
     try {
         const submitBtn = form.querySelector('button[type="submit"]');
         const originalText = submitBtn.innerHTML;
-        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Guardando...';
+        
+        // Mostrar estado de carga
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Guardando...';
         submitBtn.disabled = true;
+        form.classList.add('loading');
         
         const resultado = await api.createPaciente(datos);
         
-        if (resultado.success) {
+        if (resultado && (resultado.success || resultado.id)) {
             api.showNotification('Paciente creado exitosamente', 'success');
+            
+            // Limpiar formulario
+            form.reset();
+            form.querySelectorAll('.is-valid, .is-invalid').forEach(el => {
+                el.classList.remove('is-valid', 'is-invalid');
+            });
+            
+            // Redireccionar después de un momento
             setTimeout(() => {
                 window.location.href = 'pacientes.html';
-            }, 1000);
+            }, 1500);
         } else {
-            throw new Error(resultado.error || 'Error al crear paciente');
+            throw new Error(resultado?.error || 'Error desconocido al crear paciente');
         }
     } catch (error) {
-        api.showNotification('Error al crear el paciente', 'error');
+        console.error('Error creando paciente:', error);
+        api.showNotification(
+            error.message || 'Error al crear el paciente. Por favor intente nuevamente.', 
+            'error'
+        );
     } finally {
+        // Restaurar botón y formulario
         const submitBtn = form.querySelector('button[type="submit"]');
-        submitBtn.innerHTML = '<i class="bi bi-check-circle me-2"></i>Guardar Paciente';
+        submitBtn.innerHTML = '<i class="bi bi-check-circle me-2" aria-hidden="true"></i>Guardar Paciente';
         submitBtn.disabled = false;
+        form.classList.remove('loading');
     }
 }
 
