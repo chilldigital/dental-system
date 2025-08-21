@@ -3,9 +3,6 @@
 root * /usr/share/caddy
 file_server
 
-reverse_proxy /api/* https://n8n.chilldigital.tech {
-    uri strip_prefix /api
-    uri add_prefix /webhook
-}
+reverse_proxy /api/* https://n8n.chilldigital.tech/webhook/*
 
 try_files {path} /index.html
