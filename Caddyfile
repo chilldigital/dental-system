@@ -3,10 +3,11 @@
 root * /usr/share/caddy
 file_server
 
-reverse_proxy /api/* https://n8n.chilldigital.tech {
-    uri strip_prefix /api
-    uri prepend /webhook
-    header_up Host {upstream_hostport}
+handle /api/* {
+    reverse_proxy https://n8n.chilldigital.tech {
+        rewrite /api/* /webhook/*
+        header_up Host n8n.chilldigital.tech
+    }
 }
 
 try_files {path} /index.html
