@@ -20,21 +20,6 @@ odonto.chilldigital.tech {
     # PROXY A N8N - DEBE IR PRIMERO (más específico)
     # ===================================================================
     
-    # Manejar OPTIONS requests para CORS
-    @cors_preflight {
-        method OPTIONS
-        path /api/*
-    }      
-
-    respond @cors_preflight 204 {
-        header Access-Control-Allow-Origin "https://odonto.chilldigital.tech"
-        header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
-        header Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With, X-CSRF-Token"
-        header Access-Control-Allow-Credentials "true"
-        header Access-Control-Max-Age "86400"
-    }
-
-    
     # Proxy reverso a N8N (quita /api y agrega /webhook)
     handle_path /api/* {
         reverse_proxy https://n8n.chilldigital.tech/webhook{path} {
