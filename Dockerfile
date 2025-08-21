@@ -11,8 +11,11 @@ RUN mkdir -p /var/cache/nginx && \
     mkdir -p /var/cache/nginx/fastcgi_temp && \
     mkdir -p /var/cache/nginx/uwsgi_temp && \
     mkdir -p /var/cache/nginx/scgi_temp && \
+    mkdir -p /run && \
     chown -R nginxuser:nginxuser /var/cache/nginx && \
-    chmod -R 755 /var/cache/nginx
+    chown -R nginxuser:nginxuser /run && \
+    chmod -R 755 /var/cache/nginx && \
+    chmod -R 755 /run
 
 # Copiar archivos de configuración
 COPY nginx.conf /etc/nginx/nginx.conf
@@ -21,14 +24,12 @@ COPY nginx.conf /etc/nginx/nginx.conf
 COPY public/ /usr/share/nginx/html/
 COPY src/ /usr/share/nginx/html/src/
 
-# Verificar estructura
+# Verificar estructura y configurar permisos
 RUN echo "=== VERIFICANDO ESTRUCTURA ===" && \
     ls -la /usr/share/nginx/html/ && \
     ls -la /usr/share/nginx/html/src/styles/ && \
-    ls -la /usr/share/nginx/html/src/scripts/
-
-# Configurar permisos de los archivos web
-RUN chown -R nginxuser:nginxuser /usr/share/nginx/html && \
+    ls -la /usr/share/nginx/html/src/scripts/ && \
+    chown -R nginxuser:nginxuser /usr/share/nginx/html && \
     chmod -R 755 /usr/share/nginx/html && \
     chown -R nginxuser:nginxuser /var/log/nginx && \
     chown -R nginxuser:nginxuser /etc/nginx/conf.d
