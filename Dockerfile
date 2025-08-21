@@ -1,42 +1,45 @@
-# Dockerfile que organiza archivos para nginx
-FROM nginx:alpine
+# Dockerfile optimizado para DentalPro con Caddy
+FROM caddy:2-alpine
 
-# Crear usuario no-root
-RUN adduser -D nginxuser
+# Copiar archivos del proyecto manteniendo estructura
+COPY public/ /usr/share/caddy/
+COPY src/ /usr/share/caddy/src/
 
-# Crear directorios temporales y asignar permisos
-RUN mkdir -p /var/cache/nginx && \
-    mkdir -p /var/cache/nginx/client_temp && \
-    mkdir -p /var/cache/nginx/proxy_temp && \
-    mkdir -p /var/cache/nginx/fastcgi_temp && \
-    mkdir -p /var/cache/nginx/uwsgi_temp && \
-    mkdir -p /var/cache/nginx/scgi_temp && \
-    mkdir -p /run && \
-    chown -R nginxuser:nginxuser /var/cache/nginx && \
-    chown -R nginxuser:nginxuser /run && \
-    chmod -R 755 /var/cache/nginx && \
-    chmod -R 755 /run
+# Configuración Caddy súper simple para tu estructura
+RUN echo ':80 { \
+    # Servir desde la raíz \
+    root * /usr/share/caddy \
+    file_server \
+    \
+    # Proxy para tu N8N \
+    reverse_proxy /api/* https://n8n.chilldigital.tech { \
+        uri strip_prefix /api \
+        uri add_prefix /webhook \
+    } \
+    \
+    # SPA fallback para React-style routing \
+    try_files {path} /index.html \
+    \
+    # Headers básicos de seguridad \
+    header { \
+        X-Frame-Options "SAMEORIGIN" \
+        X-Content-Type-Options "nosniff" \
+        X-XSS-Protection "1; mode=block" \
+    } \
+    \
+    # Logs para debugging en Easypanel \
+    log { \
+        output stdout \
+        level INFO \
+    } \
+}' > /etc/caddy/Caddyfile
 
-# Copiar archivos de configuración
-COPY nginx.conf /etc/nginx/nginx.conf
+# Health check para Easypanel
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD wget --quiet --tries=1 --spider http://localhost/ || exit 1
 
-# Copiar archivos de la aplicación
-COPY public/ /usr/share/nginx/html/
-COPY src/ /usr/share/nginx/html/src/
-
-# Verificar estructura y configurar permisos
-RUN echo "=== VERIFICANDO ESTRUCTURA ===" && \
-    ls -la /usr/share/nginx/html/ && \
-    ls -la /usr/share/nginx/html/src/styles/ && \
-    ls -la /usr/share/nginx/html/src/scripts/ && \
-    chown -R nginxuser:nginxuser /usr/share/nginx/html && \
-    chmod -R 755 /usr/share/nginx/html && \
-    chown -R nginxuser:nginxuser /var/log/nginx && \
-    chown -R nginxuser:nginxuser /etc/nginx/conf.d
-
-# Cambiar a usuario no-root
-USER nginxuser
-
+# Exponer puerto 80
 EXPOSE 80
 
-CMD ["nginx", "-g", "daemon off;"]
+# Caddy se ejecuta automáticamente
+CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
