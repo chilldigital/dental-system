@@ -1,117 +1,82 @@
-# =======================================================================
-# CADDYFILE - CONFIGURACIÓN DENTALPRO CON N8N
-# Versión optimizada para tu proyecto - Reemplaza nginx.conf
-# =======================================================================
-
-# Configuración global
 {
-    # Email para certificados SSL automáticos (OBLIGATORIO para producción)
-    email agustin@chilldigital.tech
-    
+    email soporte@chilldigital.tech
+    servers {
+        max_header_size 1MB
+    }
 }
 
-# =======================================================================
-# SERVIDOR PRINCIPAL - odonto.chilldigital.tech
-# =======================================================================
-
 odonto.chilldigital.tech {
-    
-    # ===================================================================
-    # PROXY A N8N - DEBE IR PRIMERO (más específico)
-    # ===================================================================
-    
+    # Manejo de preflight CORS
+    @cors_preflight {
+        method OPTIONS
+        path /api/*
+    }
+    respond @cors_preflight 204 {
+        header {
+            Access-Control-Allow-Origin "https://odonto.chilldigital.tech"
+            Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+            Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With, X-CSRF-Token"
+            Access-Control-Allow-Credentials "true"
+            Access-Control-Max-Age "86400"
+        }
+    }
+
     # Proxy reverso a N8N (quita /api y agrega /webhook)
     handle_path /api/* {
         reverse_proxy https://n8n.chilldigital.tech/webhook{path} {
-            # Headers necesarios para N8N
             header_up Host "n8n.chilldigital.tech"
             header_up X-Real-IP {remote_host}
             header_up X-Forwarded-For {remote_host}
             header_up X-Forwarded-Proto {scheme}
             header_up X-Forwarded-Host {host}
             header_up User-Agent "DentalPro-Frontend/2.0"
-            
-            # CORS headers en la respuesta
             header_down Access-Control-Allow-Origin "https://odonto.chilldigital.tech"
             header_down Access-Control-Allow-Credentials "true"
-            
-            # Timeouts
             transport http {
                 dial_timeout 30s
                 response_header_timeout 30s
             }
         }
     }
-    
-    # ===================================================================
-    # ARCHIVOS ESTÁTICOS - Directorio correcto para tu proyecto
-    # ===================================================================
-    
-    # Usar el mismo directorio que tenías configurado
+
+    # Archivos estáticos (SPA)
     root * /usr/share/caddy
-    
-    # ===================================================================
-    # HEADERS DE SEGURIDAD GLOBALES
-    # ===================================================================
-    
+
+    # Encabezados de seguridad globales
     header {
-        # Content Security Policy
         Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https:; font-src 'self' https://cdn.jsdelivr.net; connect-src 'self' https://n8n.chilldigital.tech; object-src 'none'; base-uri 'self'; form-action 'self';"
-        
-        # Headers de seguridad
         X-Frame-Options "SAMEORIGIN"
         X-Content-Type-Options "nosniff"
         X-XSS-Protection "1; mode=block"
         Referrer-Policy "strict-origin-when-cross-origin"
         Strict-Transport-Security "max-age=31536000; includeSubDomains"
         Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), speaker=()"
-        
-        # Ocultar información del servidor
         -Server
     }
-    
-    # ===================================================================
-    # CONFIGURACIÓN DE CACHE
-    # ===================================================================
-    
-    # Assets estáticos con cache largo
+
+    # Políticas de caché
     @static {
         path *.css *.js *.png *.jpg *.jpeg *.gif *.ico *.svg *.woff *.woff2 *.ttf *.eot *.webp
     }
-    
     header @static {
         Cache-Control "public, max-age=31536000, immutable"
         Vary "Accept-Encoding"
     }
-    
-    # HTML sin cache
     @html {
         path *.html
     }
-    
     header @html {
         Cache-Control "no-cache, no-store, must-revalidate"
         Pragma "no-cache"
         Expires "0"
     }
-    
-    # ===================================================================
-    # COMPRESIÓN Y SERVIR ARCHIVOS
-    # ===================================================================
-    
-    # Compresión automática
+
+    # Compresión y servicio de archivos
     encode gzip
-    
-    # SPA - Intentar archivo, directorio, finalmente index.html
     try_files {path} {path}/ /index.html
-    
-    # Servir archivos estáticos
     file_server
-    
-    # ===================================================================
-    # LOGGING
-    # ===================================================================
-    
+
+    # Logging de accesos
     log {
         output file /var/log/caddy/access.log {
             roll_size 100mb
@@ -122,31 +87,19 @@ odonto.chilldigital.tech {
     }
 }
 
-# =======================================================================
-# SERVIDOR DE DESARROLLO (OPCIONAL - para testing local)
-# =======================================================================
-
-:80 {
-    # Mismo config pero para localhost/testing
-    
-    # Proxy a N8N para desarrollo
-    handle_path /api/* {
-        reverse_proxy https://n8n.chilldigital.tech/webhook{path} {
-            header_up Host "n8n.chilldigital.tech"
-            header_up X-Real-IP {remote_host}
-            header_up X-Forwarded-For {remote_host}
-        }
-    }
-    
-    # Archivos estáticos para desarrollo
-    root * /usr/share/caddy
-    encode gzip
-    try_files {path} {path}/ /index.html
-    file_server
-}
-
-# =======================================================================
-# BLOQUEO AUTOMÁTICO DE ARCHIVOS SENSIBLES
-# Caddy bloquea automáticamente .env, .git, etc.
-# No necesitas configuración adicional
-# =======================================================================
+# (Opcional) Bloque de desarrollo local - comentar o activar solo en entorno de pruebas
+# localhost:80 {
+#     handle_path /api/* {
+#         reverse_proxy https://n8n.chilldigital.tech/webhook{path} {
+#             header_up Host "n8n.chilldigital.tech"
+#             header_up X-Real-IP {remote_host}
+#             header_up X-Forwarded-For {remote_host}
+#             header_up X-Forwarded-Proto {scheme}
+#             header_up X-Forwarded-Host {host}
+#         }
+#     }
+#     root * /usr/share/caddy
+#     encode gzip
+#     try_files {path} {path}/ /index.html
+#     file_server
+# }
