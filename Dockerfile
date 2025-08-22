@@ -1,52 +1,21 @@
-# =======================================================================
-# DOCKERFILE OPTIMIZADO - DENTALPRO CON CADDY
-# Reemplaza la configuración nginx por Caddy más simple y potente
-# =======================================================================
-
-# Usar imagen base de Caddy (Alpine para menor tamaño)
-FROM caddy:2-alpine
-
-# Crear usuario y directorios necesarios
-RUN addgroup -g 1001 -S dental && \
-    adduser -S dental -u 1001 -G dental && \
-    mkdir -p /usr/share/caddy /var/log/caddy && \
-    chown -R dental:dental /usr/share/caddy /var/log/caddy
-
-# Copiar el Caddyfile (configuración principal)
-COPY Caddyfile /etc/caddy/Caddyfile
+# Usar imagen base de nginx
+FROM nginx:alpine
 
 # Copiar archivos estáticos del proyecto
-COPY public/ /usr/share/caddy/
-COPY src/ /usr/share/caddy/src/
+COPY . /usr/share/nginx/html/
 
-# Establecer permisos correctos
-RUN chown -R dental:dental /usr/share/caddy
+# Copiar configuración personalizada de nginx
+COPY nginx.conf /etc/nginx/nginx.conf
 
-# Instalar herramientas para health check
-RUN apk add --no-cache curl
+# Crear directorio para logs si no existe
+RUN mkdir -p /var/log/nginx
 
-# Cambiar a usuario no-root por seguridad
-USER dental
+# Exponer puerto 80
+EXPOSE 80
 
-# Exponer puertos HTTP y HTTPS
-EXPOSE 80 443
-
-# Health check optimizado
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+# Healthcheck
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD curl -f http://localhost/ || exit 1
 
-# Variables de entorno
-ENV CADDY_CONFIG=/etc/caddy/Caddyfile
-ENV CADDY_DATA_DIR=/data
-ENV CADDY_CONFIG_DIR=/config
-
-# Comando de inicio optimizado
-CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
-
-# =======================================================================
-# METADATA Y LABELS
-# =======================================================================
-LABEL maintainer="Chill Digital <soporte@chilldigital.tech>"
-LABEL description="DentalPro - Sistema Odontológico con Caddy"
-LABEL version="2.0.0"
-LABEL project="dental-system"
+# Comando de inicio
+CMD ["nginx", "-g", "daemon off;"]
